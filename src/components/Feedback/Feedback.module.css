@@ -1,0 +1,31 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.buttons {
+  padding: 10px 20px;
+  min-width: 100px;
+
+  font-weight: 500;
+  font-size: 18px;
+  text-align: center;
+
+  color: #8b4513;
+  border: transparent;
+  outline: transparent;
+
+  transition: all 250ms;
+
+  cursor: pointer;
+}
+
+.buttons:focus,
+.buttons:hover {
+  transform: scale(1.2);
+
+  color: white;
+  background-color: #8b4513;
+}
