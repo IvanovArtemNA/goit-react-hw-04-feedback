@@ -1,69 +1,66 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { useState } from 'react';
 import { Section } from './Section/Section';
 import { Feedback } from './Feedback/Feedback';
 import { Statistics } from './Statistics/Statistics';
 import { Notification } from './Notification/Notification';
 
-export class App extends Component {
+export const App = () => {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0
-  };
-
-  handleFeedback = event => {
-    if (event === 'Good') {
-      this.setState({ good: this.state.good + 1 });
-    } else if (event === 'Neutral') {
-      this.setState({ neutral: this.state.neutral + 1 });
-    } else if (event === 'Bad') {
-      this.setState({ bad: this.state.bad + 1 });
+  const handleFeedback = event => {
+    const counter = prevState => prevState + 1;
+    switch (event) {
+      case 'good':
+        setGood(counter);
+        break;
+      case 'neutral':
+        setNeutral(counter);
+        break;
+      case 'bad':
+        setBad(counter);
+        break;
+      default:
     }
   };
 
-   countTotalFeedback = () => {
-        return this.state.good + this.state.neutral + this.state.bad;
-   }
-    
-    countPositiveFeedbackPercentage = () => {
-    if (this.countTotalFeedback() === 0) {
-    return 0;
-    }
-        return Math.round((this.state.good / this.countTotalFeedback()) * 100);
-    }
+  const countTotalFeedback = good + neutral + bad;
+  const countPositiveFeedbackPercentage = Math.round((good / countTotalFeedback) * 100);
 
-    render() {
-      return (
-        <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          textAlign: 'center',
-          height: '100vh',
-          fontSize: 26,
-          color: '#8B4513',
-          backgroundColor: '#FFE4E1',
-        }}
-      >
-        <Section title="Please leave feedback">
-          <Feedback
-            options={['Good', 'Neutral', 'Bad']}
-            onLeaveFeedback={this.handleFeedback}
-          />{' '}
-        </Section>
-          <Section title="Statistics">
-          {this.countTotalFeedback() !==0 ? (
-            <Statistics
-              good={this.state.good}
-              neutral={this.state.neutral}
-              bad={this.state.bad}
-              total={this.countTotalFeedback()}
-              positivePercentage={this.countPositiveFeedbackPercentage()}/>
-          ) : (<Notification message="There is no feedback" />)}
-        </Section>
-          </div>
-        );
-    }
-}
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        textAlign: 'center',
+        height: '100vh',
+        fontSize: 26,
+        color: '#8B4513',
+        backgroundColor: '#FFE4E1',
+      }}
+    >
+      <Section title="Please leave feedback">
+        <Feedback
+          options={['good', 'neutral', 'bad']}
+          onLeaveFeedback={handleFeedback}
+        />{' '}
+      </Section>
+      <Section title="Statistics">
+        {countTotalFeedback ? (
+          <Statistics
+            good={good}
+            neutral={neutral}
+            bad={bad}
+            total={countTotalFeedback}
+            positivePercentage={countPositiveFeedbackPercentage}
+          />
+        ) : (
+          <Notification message="There is no feedback" />
+        )}
+      </Section>
+    </div>
+  );
+};
